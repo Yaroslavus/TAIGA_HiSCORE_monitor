@@ -5,26 +5,19 @@ Created on Sun Oct 31 05:59:17 2021
 
 @author: yaroslav
 """
-
-"""
-Actual version witout tkinter and pytz using.
-But this version works correctly.
-For actual but unworking - look "the same without "actual""
-"""
 import datetime
-#import tkinter as tk
+import tkinter as tk
 import threading
 import time
-#import pytz
+import pytz
 import random
-#from colour import Color
 import os
 import re
 import subprocess
 from operator import attrgetter
 
-#timezone_irkutsk = pytz.timezone('Asia/Irkutsk')
-#timezone_utc = pytz.timezone('UTC')
+timezone_irkutsk = pytz.timezone('Asia/Irkutsk')
+timezone_utc = pytz.timezone('UTC')
 
 SCRIPT_DIR = os.getcwd()
 PORTION_REGULAR_PATTERN = r'Portion=(\d*)' 
@@ -179,8 +172,8 @@ def main_infinity_loop():
 
     while sum(while_cycle_bool) != 0:
         print("start new loop")
-#        status_files_list = ["gro_1.txt", "gro_2.txt", "gro_3.txt"]
-        status_files_list = open_files()   
+        status_files_list = ["gro_1.txt", "gro_2.txt", "gro_3.txt"]
+#        status_files_list = open_files()   
         print(status_files_list) 
         for i in range(len(status_files_list)):
             print(i)
@@ -194,56 +187,63 @@ def main_infinity_loop():
                 while_cycle_bool[i] = 0
             print("max portion checked")
 
-#        info_update()
+        info_update()
+        print("Info updated.")
         time.sleep(20)
 # =============================================================================
 #
 # =============================================================================
     
-#def today_timemarks():
+def today_timemarks():
     
-#    return datetime.datetime.now(timezone_utc), datetime.datetime.now(timezone_irkutsk)
+    return datetime.datetime.now(timezone_utc), datetime.datetime.now(timezone_irkutsk)
 # =============================================================================
 #
 # =============================================================================
-#def time_update():
+def time_update():
     
-#    while True:
+    while True:
         
-#        tunka_time_now_label['text'] = datetime.datetime.now(timezone_irkutsk).strftime("%H:%M:%S")
-#        utc_time_now_label['text'] = datetime.datetime.now(timezone_utc).strftime("%H:%M:%S")
-#        tunka_date_now_label['text'] = datetime.datetime.now(timezone_irkutsk).strftime("%d:%m:%Y")
-#        utc_date_now_label['text'] = datetime.datetime.now(timezone_utc).strftime("%d:%m:%Y")  
+        tunka_time_now_label['text'] = datetime.datetime.now(timezone_irkutsk).strftime("%H:%M:%S")
+        utc_time_now_label['text'] = datetime.datetime.now(timezone_utc).strftime("%H:%M:%S")
+        tunka_date_now_label['text'] = datetime.datetime.now(timezone_irkutsk).strftime("%d:%m:%Y")
+        utc_date_now_label['text'] = datetime.datetime.now(timezone_utc).strftime("%d:%m:%Y")  
 
-#        time.sleep(1)
+        time.sleep(1)
         
-#def info_update():
+def info_update():
             
-#    while True:        
+    while True:        
                 
-#        for n in range(len(cluster_frame_list)):
-#            for i in range(16):
-#                for j in range(2):
-#                    station_frame = tk.Frame(cluster_frame_list[n], width=118, height=100, relief=tk.GROOVE, borderwidth=1)
-#                    station_frame.grid(row=2*n+j, column=i)
-#                    station_frame.grid_propagate(0)
-#                    canvas = tk.Canvas(station_frame, width=45, height=95)
+        for n in range(len(cluster_frame_list)):
+            for i in range(16):
+                for j in range(2):
+                    station_frame = tk.Frame(cluster_frame_list[n], width=118, height=100, relief=tk.GROOVE, borderwidth=1)
+                    station_frame.grid(row=2*n+j, column=i)
+                    station_frame.grid_propagate(0)
+                    canvas = tk.Canvas(station_frame, width=45, height=95)
+
+                    cluster_number = n + 1
+                    station_number = j + 2*i + 1
+                    for station in Station.list_of_station:
+                        if (station.cluster_number == cluster_number) and (station.station_number == station_number):
+                            station.show_station()
+                            count_rate = station.count_rate
+                            station_time = station.station_time
+                            threshold = station.threshold
+                            frequency = station.frequency
+                            station_id = station.station_id
+                            if 9050 < frequency < 10050:
+                                frequency_color = "lightgreen"
+                            else:
+                                frequency_color = "darkred"
+                            count_rate_color = value_to_color(count_rate)
                     
-#                    frequency_color = random.choice(["darkred", "lightgreen"])
-#                    count_rate_color = random.choice(["dark salmon", "salmon", "light salmon", "tomato", "orange red", "red"])
-                    
-#                    canvas.create_oval(10, 10, 40, 40, fill=count_rate_color)
-#                    canvas.create_rectangle(10, 60, 30, 70, fill='lightblue')
-#                    canvas.create_oval(10, 80, 20, 90, fill=frequency_color)
-#                    canvas.grid(row=0, column=0)
+                            canvas.create_oval(10, 10, 40, 40, fill=count_rate_color)
+                            canvas.create_rectangle(10, 60, 30, 70, fill='lightblue')
+                            canvas.create_oval(10, 80, 20, 90, fill=frequency_color)
+                            canvas.grid(row=0, column=0)
                 
-#                    cluster_number = random.randint(0, 200)
-#                    station_number = random.randint(0, 200)
-#                    count_rate = random.randint(0, 200)
-#                    station_time = random.randint(0, 200)
-#                    threshold = random.randint(0, 200)
-#                    frequency = random.choice(["OK", "NOT OK", "UNKNOWN"])
-                    
 #                    Station(
 #                            station_number = station_number,
 #                            cluster_number = cluster_number,
@@ -252,126 +252,124 @@ def main_infinity_loop():
 #                            threshold = threshold,
 #                            frequency = frequency
 #                            )
-#                    data_label=tk.Label(station_frame, text = "#: {}\nCR: {}\nTH: {}\nT: {}\nFr: {}".format(
-#                                        station_number, count_rate, station_time, threshold, frequency), font=('Times', '9'))
-#                    data_label.grid(row=0, column=1, sticky='nw')
-#        time.sleep(120)
+                            data_label=tk.Label(station_frame, text = "#:\n{}\nCR:\n{}\nTH:\n{}\nT:\n{}\nFr:\n{}".format(
+                                                station_id, count_rate, threshold, station_time, frequency), font=('Times', '7'))
+                            data_label.grid(row=0, column=1, sticky='nw')
+        time.sleep(120)
 # =============================================================================
 #
 # =============================================================================
         
-#def values_to_hex_color(list_of_values):
-#    
-#    list_of_values.sort()
-#    bottom_color = Color.black
-#    top_color = Color.red
-#    gradient = list(bottom_color.range_to(top_color, 20))
-#    grad_rgb = [x.rgb for x in gradient]
-#    grad_rgb_255 = [list(map(lambda x: int(x*255), i)) for i in grad_rgb]
-#    hex_colors_list = []
-#    for rgb_color in grad_rgb_255:
-#        hex_color = rgbtohex(rgb_color)
-#        hex_colors_list.append(hex_color)
-#    return hex_colors_list
-## =============================================================================
-##
-## =============================================================================
-#    
-#def rgbtohex(r,g,b):
-#    return f'#{r:02x}{g:02x}{b:02x}'
+def value_to_color(value):
+
+    list_of_colors = ["black", "light salmon", "coral", "tomato", "orange red", "red", "white"]    
+    if value < 5:
+        return list_of_colors[0]
+    elif 5 <= value < 8:
+        return list_of_colors[1]
+    elif 8 <= value < 11:
+        return list_of_colors[2]
+    elif 11 <= value < 14:
+        return list_of_colors[3]
+    elif 14 <= value < 17:
+        return list_of_colors[4]
+    elif 17 <= value < 20:
+        return list_of_colors[5]
+    else:
+        return list_of_colors[6]
 # =============================================================================
 #
 # =============================================================================
 
-#utc_datetime_now, tunka_datetime_now = today_timemarks()
+utc_datetime_now, tunka_datetime_now = today_timemarks()
 
-#main_form = tk.Tk()
-#main_form.title("HiScore shift monitor for {}".format(utc_datetime_now.strftime("%d:%m:%Y")))
-#main_form.geometry("{}x{}".format(1897,930))
+main_form = tk.Tk()
+main_form.title("HiScore shift monitor for {}".format(utc_datetime_now.strftime("%d:%m:%Y")))
+main_form.geometry("{}x{}".format(1897,930))
 
-#time_frame = tk.Frame(main_form, relief=tk.GROOVE, borderwidth=1)
-#time_frame.pack(fill=tk.X)
+time_frame = tk.Frame(main_form, relief=tk.GROOVE, borderwidth=1)
+time_frame.pack(fill=tk.X)
             
-#utc_date_title_label = tk.Label(time_frame, text="UTC Date:")
-#utc_time_title_label = tk.Label(time_frame, text="UTC Time:")
-#tunka_date_title_label = tk.Label(time_frame, text="Tunka Date:")
-#tunka_time_title_label = tk.Label(time_frame, text="Tunka Time:")
+utc_date_title_label = tk.Label(time_frame, text="UTC Date:")
+utc_time_title_label = tk.Label(time_frame, text="UTC Time:")
+tunka_date_title_label = tk.Label(time_frame, text="Tunka Date:")
+tunka_time_title_label = tk.Label(time_frame, text="Tunka Time:")
             
-#utc_date_title_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
-#utc_time_title_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
-#tunka_date_title_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
-#tunka_time_title_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
+utc_date_title_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
+utc_time_title_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
+tunka_date_title_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
+tunka_time_title_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
         
-#tunka_time_now_label = tk.Label(time_frame, text=tunka_datetime_now.strftime("%H:%M:%S"))
-#utc_date_now_label = tk.Label(time_frame, text=utc_datetime_now.strftime("%d:%m:%Y") )
-#utc_time_now_label = tk.Label(time_frame, text=utc_datetime_now.strftime("%H:%M:%S"))
-#tunka_date_now_label = tk.Label(time_frame, text=tunka_datetime_now.strftime("%d:%m:%Y"))
+tunka_time_now_label = tk.Label(time_frame, text=tunka_datetime_now.strftime("%H:%M:%S"))
+utc_date_now_label = tk.Label(time_frame, text=utc_datetime_now.strftime("%d:%m:%Y") )
+utc_time_now_label = tk.Label(time_frame, text=utc_datetime_now.strftime("%H:%M:%S"))
+tunka_date_now_label = tk.Label(time_frame, text=tunka_datetime_now.strftime("%d:%m:%Y"))
                 
-#utc_date_now_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
-#utc_time_now_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
-#tunka_date_now_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
-#tunka_time_now_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
+utc_date_now_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
+utc_time_now_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
+tunka_date_now_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
+tunka_time_now_label.pack(side=tk.LEFT, ipadx=4, padx=4, fill=tk.X)
         
-#info_frame = tk.Frame(main_form, relief=tk.GROOVE)
-#info_frame.pack(fill=tk.X)
-#cluster_frame_list = []
-#for i in range (4):
+info_frame = tk.Frame(main_form, relief=tk.GROOVE)
+info_frame.pack(fill=tk.X)
+cluster_frame_list = []
+for i in range (4):
             
-#    cluster_number_label = tk.Label(info_frame, text="Cluster # " + str(i+1))
-#    cluster_number_label.grid(row=2*i, column=0)
-#    cluster_frame = tk.Frame(info_frame, relief=tk.GROOVE, borderwidth=1)
-#    cluster_frame_list.append(cluster_frame)
-#    cluster_frame.grid(row=2*i+1, column=0)
+    cluster_number_label = tk.Label(info_frame, text="Cluster # " + str(i+1))
+    cluster_number_label.grid(row=2*i, column=0)
+    cluster_frame = tk.Frame(info_frame, relief=tk.GROOVE, borderwidth=1)
+    cluster_frame_list.append(cluster_frame)
+    cluster_frame.grid(row=2*i+1, column=0)
             
             
         
-#for n in range(len(cluster_frame_list)):
-#    for i in range(12):
-#        for j in range(2):
-#            station_frame = tk.Frame(cluster_frame_list[n], width=118, height=100, relief=tk.GROOVE, borderwidth=1)
-#            station_frame.grid(row=2*n+j, column=i)
-#            station_frame.grid_propagate(0)
+for n in range(len(cluster_frame_list)):
+    for i in range(16):
+        for j in range(2):
+            station_frame = tk.Frame(cluster_frame_list[n], width=118, height=100, relief=tk.GROOVE, borderwidth=1)
+            station_frame.grid(row=2*n+j, column=i)
+            station_frame.grid_propagate(0)
             
-#            frequency_color = random.choice(["darkred", "lightgreen"])
-#            count_rate_color = random.choice(["dark salmon", "salmon", "light salmon", "tomato", "orange red", "red"])
+            frequency_color = "black"
+            count_rate_color = "black"
             
-#            canvas = tk.Canvas(station_frame, width=45, height=95)
-#            canvas.create_oval(10, 10, 40, 40, fill="black")
-#            canvas.create_rectangle(10, 60, 30, 70, fill='lightblue')
-#            canvas.create_oval(10, 80, 20, 90, fill=frequency_color)
-#            canvas.grid(row=0, column=0)
+            canvas = tk.Canvas(station_frame, width=45, height=95)
+            canvas.create_oval(10, 10, 40, 40, fill=count_rate_color)
+            canvas.create_rectangle(10, 60, 30, 70, fill='lightblue')
+            canvas.create_oval(10, 80, 20, 90, fill=frequency_color)
+            canvas.grid(row=0, column=0)
             
-#            station_number = random.randint(0, 200)
-#            cluster_number = random.randint(0, 200)
-#            count_rate = random.randint(0, 200)
-#            station_time = random.randint(0, 200)
-#            threshold = random.randint(0, 200)
-#            frequency = random.choice(["OK", "NOT OK", "UNKNOWN"])
+            station_number = random.randint(0, 200)
+            cluster_number = random.randint(0, 200)
+            count_rate = 0
+            station_time = 0
+            threshold = 0
+            frequency = "UNKNOWN"
 
-#            Station(
-#                    cluster_number = cluster_number,
-#                    station_number = station_number,
-#                    count_rate = count_rate,
-#                    station_time = station_time,
-#                    threshold = threshold,
-#                    frequency = frequency
-#                    )
-#            data_label=tk.Label(station_frame, text = "#: {}\nCR: {}\nTH: {}\nT: {}\nFr: {}".format(
-#                                station_number, count_rate, station_time, threshold, frequency), font=('Times', '9'))
-#            data_label.grid(row=0, column=1, sticky='nw')
+            Station(
+                    cluster_number = cluster_number,
+                    station_number = station_number,
+                    count_rate = count_rate,
+                    station_time = station_time,
+                    threshold = threshold,
+                    frequency = frequency
+                    )
+            data_label=tk.Label(station_frame, text = "#:\n{}\nCR:\n{}\nTH:\n{}\nT:\n{}\nFr:\n{}".format(
+                                station_number, count_rate, threshold, station_time, frequency), font=('Times', '7'))
+            data_label.grid(row=0, column=1, sticky='nw')
 
-#status_files_list = ["gro_1.txt", "gro_2.txt", "gro_3.txt"]
-status_files_list = open_files()
+status_files_list = ["gro_1.txt", "gro_2.txt", "gro_3.txt"]
+#status_files_list = open_files()
 for file_name in status_files_list:
     start_initialization(file_name)
 max_portion = [1]*len(status_files_list)
 while_cycle_bool = [1]*len(status_files_list)
-main_infinity_loop()
+#main_infinity_loop()
         
 
-#time_process = threading.Thread(target=time_update)
-#info_process = threading.Thread(target=main_infinity_loop)
-#time_process.start()
-#info_process.start()
-#main_form.mainloop()
+time_process = threading.Thread(target=time_update)
+info_process = threading.Thread(target=main_infinity_loop)
+time_process.start()
+info_process.start()
+main_form.mainloop()
 
